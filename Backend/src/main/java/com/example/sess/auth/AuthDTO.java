@@ -1,6 +1,5 @@
 package com.example.sess.auth;
 
-
 public class AuthDTO {
     public record LoginRequest(String username, String password) {
     }

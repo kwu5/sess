@@ -27,7 +27,8 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
-
+import java.security.interfaces.RSAPublicKey;
+import java.security.interfaces.RSAPrivateKey;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.slf4j.LoggerFactory;
@@ -44,13 +45,11 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-
     private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
     @Autowired
     private RsaKeyConfigProperties rsaKeyConfigProperties;
     @Autowired
     private JpaUserDetailService userDetailsService;
-
 
     @Bean
     public AuthenticationManager authManager() {
@@ -62,21 +61,46 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    
-        http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/home/**").hasAnyRole("ADMIN", "USER")  // Access to home page for both roles
-                .requestMatchers("/admin/**").hasRole("ADMIN")  // Admin-specific endpoints
-                .requestMatchers("/tasks/**").hasAnyRole("ADMIN", "USER")  // Task endpoints accessible by both roles
-                .anyRequest().authenticated())  // Any other request must be authenticated
-                .csrf(csrf -> csrf.disable())
+    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector)
+            throws Exception {
+
+        // http.authorizeHttpRequests(auth -> auth
+        // .requestMatchers("/home/**").hasAnyRole("ADMIN", "USER") // Access to home
+        // page for both roles
+        // .requestMatchers("/admin/**").hasRole("ADMIN") // Admin-specific endpoints
+        // // .requestMatchers("/tasks/**").hasAnyRole("ADMIN", "USER") // Task
+        // endpoints
+        // // accessible by both roles
+        // .requestMatchers("/tasks/**").permitAll() // Task endpoints accessible by
+        // both roles
+        // .anyRequest().authenticated()) // Any other request must be authenticated
+        // .csrf(csrf -> csrf.disable())
+        // .sessionManagement(s ->
+        // s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(decoder)))
+        // .userDetailsService(userDetailsService)
+        // .httpBasic(Customizer.withDefaults());
+        // return http.build();
+
+        return http
+                .csrf(csrf -> {
+                    csrf.disable();
+                })
+                .cors(cors -> cors.disable())
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers("/home/**").hasAnyRole("ADMIN", "USER");
+                    auth.requestMatchers("/admin/**").hasRole("ADMIN");
+                    auth.requestMatchers("/tasks/**").hasAnyRole("ADMIN", "USER");
+                    auth.anyRequest().authenticated();
+                })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
                 .userDetailsService(userDetailsService)
-                .httpBasic(Customizer.withDefaults());
-        return http.build();
-    
+                .httpBasic(Customizer.withDefaults())
+                .build();
+
     }
+
     @Bean
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
@@ -84,13 +108,12 @@ public class SecurityConfig {
 
     @Bean
     JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey()).build();
+        JWK jwk = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey())
+                .build();
 
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
-
-    
 
     @Bean
     public PasswordEncoder passwordEncoder() {

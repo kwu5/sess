@@ -22,10 +22,12 @@ public class User {
     @Column(name = "person_id")
     private Long id;
 
-    @Column(name = "userName", nullable = false)
-    private String userName;
+    @Column(name = "user_name", unique = true)
+    @NonNull
+    private String username;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", unique = true)
+    @NonNull
     private String email;
 
     @Column(name = "role", nullable = false)
@@ -35,26 +37,24 @@ public class User {
     @JsonIgnore
     private String password;
 
-
-
-    public User(Long id, String userName, String email, String role, String password) {
+    public User(Long id, String username, String email, String role, String password) {
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.email = email;
         this.role = role;
         this.password = password;
     }
 
-    public User(){}
-
-
-    @NonNull
-    public String getUserName() {
-        return this.userName;
+    public User() {
     }
 
-    public void setUserName(@NonNull String userName) {
-        this.userName = userName;
+    @NonNull
+    public String getUsername() {
+        return this.username;
+    }
+
+    public void setUsername(@NonNull String username) {
+        this.username = username;
     }
 
     public Long getId() {
@@ -79,7 +79,6 @@ public class User {
         return this.email;
     }
 
-
     public void setEmail(@NonNull String email) {
         this.email = email;
     }
@@ -101,15 +100,14 @@ public class User {
             return false;
         User user = (User) obj;
         return Objects.equals(id, user.id) &&
-                Objects.equals(userName, user.userName) &&
+                Objects.equals(username, user.username) &&
                 Objects.equals(role, user.role) &&
                 Objects.equals(email, user.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userName, role, email);
+        return Objects.hash(id, username, role, email);
     }
 
-   
 }

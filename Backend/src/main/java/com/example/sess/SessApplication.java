@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.sess.config.RsaKeyConfigProperties;
@@ -15,42 +16,42 @@ import com.example.sess.models.User;
 @SpringBootApplication
 @EnableConfigurationProperties(RsaKeyConfigProperties.class)
 @EntityScan("com.example.sess.models")
+// @EnableJpaRepositories(basePackages = { "com.example.sess.dao" })
 public class SessApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SessApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(SessApplication.class, args);
+    }
 
-	//  @Bean
-    // public CommandLineRunner initializeUser(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
-    //     return args -> {
+    // @Bean
+    // public CommandLineRunner initializeUser(UserRepository userRepository,
+    // BCryptPasswordEncoder passwordEncoder) {
+    // return args -> {
 
-    //             User user = new User();
-    //             user.setUserName("john");
-    //             user.setEmail("john@gmail.com");
-    //             user.setPassword(passwordEncoder.encode("pwd123"));
-	// 			user.setRole("USER");
+    // User user = new User();
+    // user.setUsername("john");
+    // user.setEmail("john@gmail.com");
+    // user.setPassword(passwordEncoder.encode("pwd123"));
+    // user.setRole("USER");
 
-	// 			User user1 = new User();
-    //             user.setUserName("jane");
-    //             user.setEmail("jane@gmail.com");
-    //             user.setPassword(passwordEncoder.encode("abc456"));
-	// 			user.setRole("USER");
+    // User user1 = new User();
+    // user.setUsername("jane");
+    // user.setEmail("jane@gmail.com");
+    // user.setPassword(passwordEncoder.encode("abc456"));
+    // user.setRole("USER");
 
-	// 			User user2 = new User();
-    //             user.setUserName("kyle");
-    //             user.setEmail("example@gmail.com");
-    //             user.setPassword(passwordEncoder.encode("admin"));
-	// 			user.setRole("ADMIN");
+    // User user2 = new User();
+    // user.setUsername("kyle");
+    // user.setEmail("example@gmail.com");
+    // user.setPassword(passwordEncoder.encode("admin"));
+    // user.setRole("ADMIN");
 
+    // // Save the user to the database
+    // userRepository.save(user);
+    // userRepository.save(user1);
+    // userRepository.save(user2);
 
-    //             // Save the user to the database
-    //             userRepository.save(user);
-    //             userRepository.save(user1);
-    //             userRepository.save(user2);
-
-
-    //     };
+    // };
     // }
 
 }
