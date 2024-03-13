@@ -25,11 +25,16 @@ import org.springframework.security.web.SecurityFilterChain;
 import com.example.sess.services.JpaUserDetailService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
-import java.security.interfaces.RSAPublicKey;
-import java.security.interfaces.RSAPrivateKey;
+import com.nimbusds.jose.jwk.RSAKey;
+// import java.security.interfaces.RSAPublicKey;
+// import java.security.interfaces.RSAPrivateKey;
 import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,22 +99,52 @@ public class SecurityConfig {
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> jwt.decoder(jwtDecoder())))
+                .oauth2ResourceServer((oauth2) -> oauth2.jwt((jwt) -> {
+                    try {
+                        jwt.decoder(jwtDecoder(rsaKeyConfigProperties));
+                    } catch (NoSuchAlgorithmException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch (InvalidKeySpecException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }))
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();
 
     }
 
-    @Bean
-    public JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
+    // @Bean
+    // public JwtDecoder jwtDecoder() {
+    // return
+    // NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.publicKey()).build();
+    // }
+
+    // @Bean
+    // JwtEncoder jwtEncoder() {
+    // JWK jwk = new
+    // RSAKey.Builder(rsaKeyConfigProperties.getRSAPublicKey()).privateKey(rsaKeyConfigProperties.getRSAPrivateKey())
+    // .build();
+
+    // JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+    // return new NimbusJwtEncoder(jwks);
+    // }
+
+    public JwtDecoder jwtDecoder(RsaKeyConfigProperties rsaKeyConfigProperties)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
+        return NimbusJwtDecoder.withPublicKey(rsaKeyConfigProperties.getRSAPublicKey()).build();
     }
 
     @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey())
-                .build();
+    public JwtEncoder jwtEncoder(RsaKeyConfigProperties rsaKeyConfigProperties)
+            throws NoSuchAlgorithmException, InvalidKeySpecException {
+        RSAKey.Builder builder = new RSAKey.Builder(rsaKeyConfigProperties.getRSAPublicKey())
+                .privateKey(rsaKeyConfigProperties.getRSAPrivateKey()); // Ensure this is the correct method to obtain
+                                                                        // the
+        // privateKey
+        JWK jwk = builder.build();
 
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
