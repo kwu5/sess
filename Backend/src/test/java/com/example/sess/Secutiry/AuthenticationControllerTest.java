@@ -1,4 +1,4 @@
-package com.example.sess;
+package com.example.sess.Secutiry;
 
 import static org.mockito.ArgumentMatchers.any;
 // import static org.mockito.BDDMockito.given;
@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.User;
 import org.mockito.Mockito;
 
 import com.example.sess.controller.AuthenticationController;
+import com.example.sess.services.CustomUserDetailsService;
 import com.example.sess.util.JwtUtil;
 
 // @WebMvcTest(AuthenticationController.class)
@@ -32,38 +33,38 @@ import com.example.sess.util.JwtUtil;
 
 public class AuthenticationControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @MockBean
-    private AuthenticationManager authenticationManager;
+        @MockBean
+        private AuthenticationManager authenticationManager;
 
-    @MockBean
-    private JwtUtil jwtUtil;
+        @MockBean
+        private JwtUtil jwtUtil;
 
-    @MockBean
-    private UserDetailsService userDetailsService;
+        @MockBean
+        private CustomUserDetailsService userDetailsService;
 
-    @Test
-    public void shouldReturnJWTWhenAuthenticationIsSuccessfull() throws Exception {
-        String username = "user";
-        String jwt = "dummyJwtToken";
-        String password = "password";
+        @Test
+        public void shouldReturnJWTWhenAuthenticationIsSuccessfull() throws Exception {
+                String username = "user";
+                String jwt = "dummyJwtToken";
+                String password = "password";
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(username, password,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                Authentication auth = new UsernamePasswordAuthenticationToken(username, password,
+                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
 
-        Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
-                .thenReturn(auth);
-        Mockito.when(jwtUtil.generateToken(username)).thenReturn(jwt);
+                Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                                .thenReturn(auth);
+                Mockito.when(jwtUtil.generateToken(username)).thenReturn(jwt);
 
-        // given(jwtUtil.generateToken(username)).willReturn(jwt);
-        mockMvc.perform(post("/login")
-                .contentType("application/json")
-                .content("{\"username\":\"" + username + "\", \"password\":\"" + password + "\"}"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").value(jwt));
+                // given(jwtUtil.generateToken(username)).willReturn(jwt);
+                mockMvc.perform(post("/login")
+                                .contentType("application/json")
+                                .content("{\"username\":\"" + username + "\", \"password\":\"" + password + "\"}"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.jwt").value(jwt));
 
-    }
+        }
 
 }

@@ -16,7 +16,6 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-
     private UserRepository userRepository;
 
     @Autowired
@@ -24,7 +23,7 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    public User registerUser(String username, String email, String role, String password) {
+    public User registerUser(String username, String password, String email, String role) {
         String encodedPassword = passwordEncoder.encode(password);
         User newUser = new User(username, email, role, encodedPassword);
         return userRepository.save(newUser);

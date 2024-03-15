@@ -1,4 +1,4 @@
-package com.example.sess;
+package com.example.sess.Secutiry;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,6 +24,7 @@ import com.example.sess.config.SecurityConfig;
 import com.example.sess.controller.UserRegistrationController;
 import com.example.sess.dto.UserRegistrationDto;
 import com.example.sess.models.User;
+import com.example.sess.services.CustomUserDetailsService;
 import com.example.sess.services.UserService;
 import com.example.sess.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,16 +48,21 @@ public class UserRegistrationControllerTest {
         @MockBean
         private JwtUtil jwtUtil;
 
+        @MockBean
+        private CustomUserDetailsService customUserDetailsService;
+
         @Test
         public void shouldReturnUserWhenRegistrationIsSuccessful() throws Exception {
 
-                UserRegistrationDto registrationDto = new UserRegistrationDto("username", "email@example.com",
+                UserRegistrationDto registrationDto = new UserRegistrationDto("username",
+                                "email@example.com",
                                 "ROLE_USER",
                                 "passwordHash");
                 User registratedUser = new User();
                 registratedUser.setUsername(registrationDto.getUsername());
 
-                given(userService.registerUser(any(String.class), any(String.class), any(String.class),
+                given(userService.registerUser(any(String.class), any(String.class),
+                                any(String.class),
                                 any(String.class)))
                                 .willReturn(registratedUser);
 
