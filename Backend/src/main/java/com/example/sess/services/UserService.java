@@ -1,52 +1,22 @@
 package com.example.sess.services;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-// import org.springframework.security.core.userdetails.User; // Spring Security User
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-// import org.springframework.stereotype.Service;
-
-// import com.example.sess.dao.TaskRepository;
-// import com.example.sess.dao.UserRepository;
-
-// @Service
-// public class UserService {
-
-//     private TaskRepository taskRepository;
-//     private UserRepository userRepository;
-
-//     public UserService(UserRepository userRepository) {
-//         this.userRepository = userRepository;
-//     }
-
-//     public Long getUserId(String name){
-
-//         return userRepository.findIdByName(name);
-
-//     }
-// }
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.sess.dao.UserRepository;
 import com.example.sess.models.User;
-import com.fasterxml.jackson.annotation.OptBoolean;
-
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
 public class UserService {
 
     @Autowired
-    // private final UserRepository userRepository;
+
     private UserRepository userRepository;
 
     @Autowired
@@ -54,35 +24,39 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    // public UserService(UserRepository userRepository) {
-    // this.userRepository = userRepository;
-    // }
-
-    @Transactional
-    public User createUser(String username, String rawPassword, String email, String role) {
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(rawPassword));
-        newUser.setRole(role);
-        newUser.setEmail(email);
-        // Add other default settings or validations if needed
-
-        System.out.println(newUser.getUsername() + " is Saving");
+    public User registerUser(String username, String email, String role, String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        User newUser = new User(username, email, role, encodedPassword);
         return userRepository.save(newUser);
     }
 
-    @Transactional
-    public User updateUser(Long userId, String newusername, String newRawPassword, String newRole) {
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    // @Transactional
+    // public User createUser(String username, String rawPassword, String email,
+    // String role) {
+    // User newUser = new User();
+    // newUser.setUsername(username);
+    // newUser.setPassword(passwordEncoder.encode(rawPassword));
+    // newUser.setRole(role);
+    // newUser.setEmail(email);
+    // // Add other default settings or validations if needed
 
-        existingUser.setUsername(newusername);
-        existingUser.setPassword(passwordEncoder.encode(newRawPassword));
-        existingUser.setRole(newRole);
-        // Implement other changes or business logic as needed
+    // System.out.println(newUser.getUsername() + " is Saving");
+    // return userRepository.save(newUser);
+    // }
 
-        return userRepository.save(existingUser);
-    }
+    // @Transactional
+    // public User updateUser(Long userId, String newusername, String
+    // newRawPassword, String newRole) {
+    // User existingUser = userRepository.findById(userId)
+    // .orElseThrow(() -> new RuntimeException("User not found"));
+
+    // existingUser.setUsername(newusername);
+    // existingUser.setPassword(passwordEncoder.encode(newRawPassword));
+    // existingUser.setRole(newRole);
+    // // Implement other changes or business logic as needed
+
+    // return userRepository.save(existingUser);
+    // }
 
     public Long getUserId(String name) throws UsernameNotFoundException {
 
@@ -99,16 +73,16 @@ public class UserService {
 
     }
 
-    // public User getUserByusername(String name){
-    // return userRepository.findByusername(name);
-    // }
+    // // public User getUserByusername(String name){
+    // // return userRepository.findByusername(name);
+    // // }
 
-    public boolean isAdmin(String username) {
-        return userRepository.findByUsername(username)
-                .map(user -> user.getRole())
-                .map(String::toUpperCase) // assuming role is stored as uppercase
-                .filter(role -> role.equals("ADMIN"))
-                .isPresent();
-    }
+    // public boolean isAdmin(String username) {
+    // return userRepository.findByUsername(username)
+    // .map(user -> user.getRole())
+    // .map(String::toUpperCase) // assuming role is stored as uppercase
+    // .filter(role -> role.equals("ADMIN"))
+    // .isPresent();
+    // }
 
 }

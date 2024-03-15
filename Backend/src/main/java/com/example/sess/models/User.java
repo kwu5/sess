@@ -35,14 +35,13 @@ public class User {
 
     @NonNull
     @JsonIgnore
-    private String password;
+    private String passwordHash;
 
-    public User(Long id, String username, String email, String role, String password) {
-        this.id = id;
+    public User(String username, String email, String role, String passwordHash) {
         this.username = username;
         this.email = email;
         this.role = role;
-        this.password = password;
+        this.passwordHash = passwordHash;
     }
 
     public User() {
@@ -84,12 +83,12 @@ public class User {
     }
 
     @NonNull
-    public String getPassword() {
-        return this.password;
+    public String getPasswordHash() {
+        return this.passwordHash;
     }
 
     public void setPassword(@NonNull String password) {
-        this.password = password;
+        this.passwordHash = password;
     }
 
     @Override

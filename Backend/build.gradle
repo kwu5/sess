@@ -23,31 +23,32 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 
-
-	// implementation 'org.springframework.data:spring-data-jdbc'
-	testImplementation 'com.h2database:h2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	
 
 	// implementation 'org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.2.Final'
 	// https://mvnrepository.com/artifact/jakarta.persistence/jakarta.persistence-api
 	implementation group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
 
-    // implementation 'org.springframework:spring-webmvc:6.1.0'
-    implementation 'org.springframework:spring-orm:6.1.0'
+    // // implementation 'org.springframework:spring-webmvc:6.1.0'
+    // implementation 'org.springframework:spring-orm:6.1.0'
 
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3' // Use the compatible version
 
+	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	
-	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-resource-server
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server', version: '3.1.4'
+	// // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-resource-server
+	// implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server', version: '3.1.4'
 
 
 
 
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
-    testImplementation 'org.springframework.security:spring-security-test'
+	// implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
+    // testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
@@ -65,7 +66,7 @@ test {
         showStackTraces true
 
         // Change to `true` for more verbose test output
-        showStandardStreams = true
+        showStandardStreams = false
 
 		
     }
