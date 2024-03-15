@@ -14,7 +14,7 @@ This project use Spring boot frame work. Test Driven Development applied.
 
 ### Controller:
 * TaskController
-* UserController
+* UserController 
 
 
 ### dao:
@@ -23,8 +23,8 @@ This project use Spring boot frame work. Test Driven Development applied.
 
 
 ### models:
-* Task
-* User : admin, user
+* Task : taskId(String), startTime(LocalDateTime), endTime(LocalDateTime), owner(long), client(Long), location(String), type(String), description(String)
+* User : admin, user; WIP
 
 
 ### service:
