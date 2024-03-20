@@ -1,20 +1,10 @@
 package com.example.sess;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import com.example.sess.config.RsaKeyConfigProperties;
-import com.example.sess.dao.UserRepository;
-import com.example.sess.models.User;
 
 @SpringBootApplication
-@EnableConfigurationProperties(RsaKeyConfigProperties.class)
 @EntityScan("com.example.sess.models")
 // @EnableJpaRepositories(basePackages = { "com.example.sess.dao" })
 public class SessApplication {
