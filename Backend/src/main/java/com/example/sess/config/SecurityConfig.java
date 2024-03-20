@@ -23,16 +23,18 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableWebSecurity
 public class SecurityConfig {
 
-        private AuthenticationManager authenticationManager;
+        // @Autowired
+        // private AuthenticationManager authenticationManager;
 
         @Autowired
         private JwtUtil jwtUtil;
 
-        private final CustomUserDetailsService customUserDetailsService;
+        @Autowired
+        private CustomUserDetailsService customUserDetailsService;
 
-        public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-                this.customUserDetailsService = customUserDetailsService;
-        }
+        // public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        // this.customUserDetailsService = customUserDetailsService;
+        // }
 
         @Bean
         public BCryptPasswordEncoder passwordEncoder() {
@@ -40,8 +42,13 @@ public class SecurityConfig {
         }
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http)
+        public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager)
                         throws Exception {
+
+                JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager,
+                                jwtUtil);
+                JWTAuthorizationFilter jwtAuthorizationFilter = new JWTAuthorizationFilter(jwtUtil,
+                                customUserDetailsService);
 
                 http
                                 .csrf(csrf -> csrf.disable())
@@ -54,9 +61,8 @@ public class SecurityConfig {
                                 .sessionManagement(management -> management
                                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                                .addFilterBefore(new JWTAuthenticationFilter(authenticationManager, jwtUtil),
-                                                UsernamePasswordAuthenticationFilter.class)
-                                .addFilterBefore(new JWTAuthorizationFilter(jwtUtil, customUserDetailsService),
+                                .addFilter(jwtAuthenticationFilter)
+                                .addFilterBefore(jwtAuthorizationFilter,
                                                 UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
@@ -66,5 +72,6 @@ public class SecurityConfig {
         public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration authenticationConfiguration)
                         throws Exception {
                 return authenticationConfiguration.getAuthenticationManager();
+
         }
 }

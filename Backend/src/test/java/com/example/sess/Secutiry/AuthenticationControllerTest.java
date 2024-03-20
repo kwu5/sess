@@ -22,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.mockito.Mockito;
 
 import com.example.sess.controller.AuthenticationController;
@@ -51,12 +52,18 @@ public class AuthenticationControllerTest {
                 String jwt = "dummyJwtToken";
                 String password = "password";
 
-                Authentication auth = new UsernamePasswordAuthenticationToken(username, password,
-                                Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER")));
+                UserDetails userDetails = User.builder()
+                                .username(username)
+                                .password(password)
+                                .authorities("ROLE_USER")
+                                .build();
+
+                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, password,
+                                userDetails.getAuthorities());
 
                 Mockito.when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                                 .thenReturn(auth);
-                Mockito.when(jwtUtil.generateToken(username)).thenReturn(jwt);
+                Mockito.when(jwtUtil.generateToken(any(UserDetails.class))).thenReturn(jwt);
 
                 // given(jwtUtil.generateToken(username)).willReturn(jwt);
                 mockMvc.perform(post("/login")

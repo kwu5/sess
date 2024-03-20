@@ -29,6 +29,8 @@ import com.example.sess.services.UserService;
 import com.example.sess.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.transaction.Transactional;
+
 // @WebMvcTest(UserRegistrationController.class)
 @WebMvcTest(controllers = UserRegistrationController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class UserRegistrationControllerTest {
@@ -52,7 +54,7 @@ public class UserRegistrationControllerTest {
         private CustomUserDetailsService customUserDetailsService;
 
         @Test
-        public void shouldReturnUserWhenRegistrationIsSuccessful() throws Exception {
+        public void shouldReturnCreatedWhenRegistrationIsSuccessful() throws Exception {
 
                 UserRegistrationDto registrationDto = new UserRegistrationDto("username",
                                 "email@example.com",
@@ -69,7 +71,7 @@ public class UserRegistrationControllerTest {
                 mockMvc.perform(post("/register")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(registrationDto)))
-                                .andExpect(status().isOk());
+                                .andExpect(status().isCreated());
 
         }
 

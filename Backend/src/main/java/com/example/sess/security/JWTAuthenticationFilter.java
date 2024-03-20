@@ -9,6 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.FilterChain;
@@ -20,16 +22,30 @@ import java.util.ArrayList;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        setFilterProcessesUrl("/login"); // Custom login URL
+        setFilterProcessesUrl("/login");
+
+        this.setAuthenticationSuccessHandler(new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                    Authentication auth) throws IOException {
+                // Check if the principal is an instance of UserDetails
+                if (auth.getPrincipal() instanceof UserDetails) {
+                    UserDetails userDetails = (UserDetails) auth.getPrincipal();
+                    // Generate token with UserDetails
+                    String token = jwtUtil.generateToken(userDetails);
+                    // Include the token in the response
+                    response.addHeader("Authorization", "Bearer " + token);
+                }
+            }
+
+        });
     }
 
     @Override
@@ -44,10 +60,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-            Authentication auth) throws IOException, ServletException {
-        String token = jwtUtil.generateToken(auth.getName());
-        response.addHeader("Authorization", "Bearer " + token);
-    }
+    // @Override
+    // protected void successfulAuthentication(HttpServletRequest request,
+    // HttpServletResponse response, FilterChain chain,
+    // Authentication auth) throws IOException, ServletException {
+    // String token = jwtUtil.generateToken(auth.getName());
+    // response.addHeader("Authorization", "Bearer " + token);
+    // }
 }
