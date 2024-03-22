@@ -1,9 +1,3 @@
-// package com.example.sess.models;
-// import org.springframework.data.annotation.Id;
-
-// public record Task(@Id Long id, String time, String owner) {
-
-// }
 
 package com.example.sess.models;
 
@@ -30,11 +24,10 @@ import jakarta.persistence.TemporalType;
 @Entity
 @Table(name = "task")
 public class Task {
-    
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "taskId")
+    @Column(name = "taskId")
     private Long id;
 
     @Column(name = "startTime", nullable = false)
@@ -45,8 +38,7 @@ public class Task {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
     private LocalDateTime endTime;
 
-
-    @Column(name = "owner", nullable =  false)
+    @Column(name = "owner", nullable = false)
     private long ownerId;
 
     @Column(name = "client")
@@ -61,40 +53,43 @@ public class Task {
     @Column(name = "description")
     private String description;
 
-
-    public Task(Long id, LocalDateTime startTime, LocalDateTime endTime, long ownerId, Long clientId, String location, String type, String description) {
-        if(id != null)  this.id = id;
+    public Task(Long id, LocalDateTime startTime, LocalDateTime endTime, long ownerId, Long clientId, String location,
+            String type, String description) {
+        if (id != null)
+            this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
         this.ownerId = ownerId;
-        if(clientId != null)  this.clientId = clientId;
+        if (clientId != null)
+            this.clientId = clientId;
         this.location = location;
         this.type = type;
         this.description = description;
     }
 
-
-    public Task(Long id, String startTime, String endTime, long ownerId, Long clientId, String location, String type, String description) {
+    public Task(Long id, String startTime, String endTime, long ownerId, Long clientId, String location, String type,
+            String description) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm:ss");
-        if(id != null)  this.id = id;
-        this.startTime = LocalDateTime.parse(startTime,formatter);
-        this.endTime = LocalDateTime.parse(endTime,formatter);
+        if (id != null)
+            this.id = id;
+        this.startTime = LocalDateTime.parse(startTime, formatter);
+        this.endTime = LocalDateTime.parse(endTime, formatter);
         this.ownerId = ownerId;
-        if(clientId != null)  this.clientId = clientId;
+        if (clientId != null)
+            this.clientId = clientId;
         this.location = location;
         this.type = type;
         this.description = description;
     }
 
-
-    protected Task(){}
-
+    protected Task() {
+    }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
@@ -123,7 +118,8 @@ public class Task {
     }
 
     public Long getClientId() {
-        if(this.clientId == null)  return null;
+        if (this.clientId == null)
+            return null;
         return this.clientId;
     }
 
@@ -155,63 +151,63 @@ public class Task {
         this.description = description;
     }
 
-
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         Task task = (Task) obj;
         return Objects.equals(ownerId, task.ownerId) &&
-               Objects.equals(id, task.id) &&
-               Objects.equals(startTime, task.startTime) &&
-               Objects.equals(endTime, task.endTime) &&
-               Objects.equals(clientId, task.clientId) && 
-               Objects.equals(location, task.location) &&
-               Objects.equals(type, task.type) &&
-               Objects.equals(description, task.description);
+                Objects.equals(id, task.id) &&
+                Objects.equals(startTime, task.startTime) &&
+                Objects.equals(endTime, task.endTime) &&
+                Objects.equals(clientId, task.clientId) &&
+                Objects.equals(location, task.location) &&
+                Objects.equals(type, task.type) &&
+                Objects.equals(description, task.description);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(id, startTime, endTime, ownerId, clientId, location, type, description);
     }
 }
-    // public Task(Long id, String time, String owner) {
-    //     this.id = id;
-    //     this.time = time;
-    //     this.owner = owner;
-    // }
+// public Task(Long id, String time, String owner) {
+// this.id = id;
+// this.time = time;
+// this.owner = owner;
+// }
 
-    // protected Task(){}
+// protected Task(){}
 
-    // // Getters and setters
-    // public Long getId() {
-    //     return id;
-    // }
+// // Getters and setters
+// public Long getId() {
+// return id;
+// }
 
-    // public String getTime() {
-    //     return time;
-    // }
+// public String getTime() {
+// return time;
+// }
 
-    // public String getOwner() {
-    //     return owner;
-    // }
+// public String getOwner() {
+// return owner;
+// }
 
-    // @Override
-    // public boolean equals(Object obj) {
-    //     if (this == obj)
-    //         return true;
-    //     if (obj == null || getClass() != obj.getClass())
-    //         return false;
-    //     Task task = (Task) obj;
-    //     return Objects.equals(id, task.id) &&
-    //             Objects.equals(owner, task.owner);
-    // }
+// @Override
+// public boolean equals(Object obj) {
+// if (this == obj)
+// return true;
+// if (obj == null || getClass() != obj.getClass())
+// return false;
+// Task task = (Task) obj;
+// return Objects.equals(id, task.id) &&
+// Objects.equals(owner, task.owner);
+// }
 
-    // @Override
-    // public int hashCode() {
-    //     return Objects.hash(id, time, owner);
-    // }
+// @Override
+// public int hashCode() {
+// return Objects.hash(id, time, owner);
+// }
 
-    
 // }

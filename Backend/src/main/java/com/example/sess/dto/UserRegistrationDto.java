@@ -15,24 +15,22 @@ public class UserRegistrationDto {
 
     public String getUsername() {
         return username;
-        // throw new UnsupportedOperationException("Unimplemented method
-        // 'getUsername'");
+
     }
 
     public String getRole() {
         return role;
-        // throw new UnsupportedOperationException("Unimplemented method 'getRole'");
+
     }
 
     public String getEmail() {
         return email;
-        // throw new UnsupportedOperationException("Unimplemented method 'getEmail'");
+
     }
 
     public String getPassword() {
         return password;
-        // throw new UnsupportedOperationException("Unimplemented method
-        // 'getPassword'");
+
     }
 
 }
