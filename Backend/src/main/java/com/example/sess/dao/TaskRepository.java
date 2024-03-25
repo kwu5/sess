@@ -13,23 +13,20 @@ import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
 
-
-
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long>, PagingAndSortingRepository<Task, Long> {
-    
-//     Task findByIdAndOwner(long id, String owner);
-//     Page<Task> findByOwner(String name, PageRequest pageRequest);
-//     boolean existsByIdAndOwner(Long requstId, String name);
 
     Optional<Task> findById(Long id);
-    Task findByIdAndOwnerId(Long id, long ownerId);
-    // Task findByIdAndOwner_id(long id, Long owner_id);
-    Page<Task> findByOwnerId(long ownerId, PageRequest pageRequest);
-    
-    
-    boolean existsByIdAndOwnerId(Long requestId, long ownerId);
-    boolean existsByStartTimeAndEndTimeAndOwnerIdAndClientIdAndLocationAndTypeAndDescription(LocalDateTime startTime, LocalDateTime endTime, long ownerId, Long clientId, String location, String type, String description);
 
-    
+    Task findByIdAndOwnerId(Long id, long ownerId);
+
+    Page<Task> findByOwnerId(long ownerId, PageRequest pageRequest);
+
+    boolean existsByStartTimeAndOwnerId(LocalDateTime startTime, long ownerId);
+
+    boolean existsByIdAndOwnerId(Long requestId, long ownerId);
+
+    boolean existsByStartTimeAndEndTimeAndOwnerIdAndClientIdAndLocationAndTypeAndDescription(LocalDateTime startTime,
+            LocalDateTime endTime, long ownerId, Long clientId, String location, String type, String description);
+
 }

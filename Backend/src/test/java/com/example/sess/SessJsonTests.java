@@ -31,29 +31,20 @@ public class SessJsonTests {
         @BeforeEach
         void setUp() throws ParseException {
 
-                // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy
-                // HH:mm:ss");
-                // tasks = Arrays.asList(
-                // new Task(99L, LocalDateTime.parse("01/01/2024 10:00:00", formatter),
-                // LocalDateTime.parse("01/01/2024 11:00:00", formatter), 30L, 50L, "3333 hell
-                // st, San Francisco, CA, 94444", "appointment", "happy day"),
-                // new Task(100L, LocalDateTime.parse("02/01/2024 10:00:00", formatter),
-                // LocalDateTime.parse("02/01/2024 11:00:00", formatter), 31L, 50L, "3333 hell
-                // st, San Francisco, CA, 94444", "appointment", null),
-                // new Task(101L, LocalDateTime.parse("03/01/2024 12:00:00", formatter),
-                // LocalDateTime.parse("03/01/2024 16:00:00", formatter), 30L, null, "33 hl st,
-                // San Francisco, CA, 94444", "event", "happy day")
-                // );
                 tasks = Arrays.array(
-                                new Task(99L, LocalDateTime.parse("01/01/2024 10:00:00", formatter),
+                                new Task(LocalDateTime.parse("01/01/2024 10:00:00", formatter),
                                                 LocalDateTime.parse("01/01/2024 11:00:00", formatter), 30L, 50L,
                                                 "3333 hell st, San Francisco, CA, 94444", "appointment", "happy day"),
-                                new Task(101L, LocalDateTime.parse("03/01/2024 12:00:00", formatter),
+                                new Task(LocalDateTime.parse("03/01/2024 12:00:00", formatter),
                                                 LocalDateTime.parse("03/01/2024 16:00:00", formatter), 30L, null,
                                                 "33 hl st, San Francisco, CA, 94444", "event", "happy day"),
-                                new Task(100L, LocalDateTime.parse("02/01/2024 10:00:00", formatter),
+                                new Task(LocalDateTime.parse("02/01/2024 10:00:00", formatter),
                                                 LocalDateTime.parse("02/01/2024 11:00:00", formatter), 31L, 50L,
                                                 "3333 hell st, San Francisco, CA, 94444", "appointment", null));
+                tasks[0].setId(99L);
+                tasks[1].setId(101L);
+                tasks[2].setId(100L);
+
         }
 
         @Test
@@ -139,10 +130,12 @@ public class SessJsonTests {
                                     "description": "happy day"
                                 }
                                     """;
+                Task testTask = new Task(LocalDateTime.parse("01/01/2024 10:00:00", formatter),
+                                LocalDateTime.parse("01/01/2024 11:00:00", formatter), 30L, 50L,
+                                "3333 hell st, San Francisco, CA, 94444", "appointment", "happy day");
+                testTask.setId(99L);
                 assertThat(json.parse(expected))
-                                .isEqualTo(new Task(99L, LocalDateTime.parse("01/01/2024 10:00:00", formatter),
-                                                LocalDateTime.parse("01/01/2024 11:00:00", formatter), 30L, 50L,
-                                                "3333 hell st, San Francisco, CA, 94444", "appointment", "happy day"));
+                                .isEqualTo(testTask);
                 assertThat(json.parseObject(expected).getId()).isEqualTo(99);
                 assertThat(json.parseObject(expected).getStartTime())
                                 .isEqualTo(LocalDateTime.parse("01/01/2024 10:00:00", formatter));
@@ -167,11 +160,14 @@ public class SessJsonTests {
                                     "description": "happy day"
                                 }
                                     """;
+
+                Task testTask = new Task(LocalDateTime.parse("03/01/2024 12:00:00", formatter),
+                                LocalDateTime.parse("03/01/2024 16:00:00", formatter), 30L, null,
+                                "33 hl st, San Francisco, CA, 94444",
+                                "event", "happy day");
+                testTask.setId(101L);
                 assertThat(json.parse(expected))
-                                .isEqualTo(new Task(101L, LocalDateTime.parse("03/01/2024 12:00:00", formatter),
-                                                LocalDateTime.parse("03/01/2024 16:00:00", formatter), 30L, null,
-                                                "33 hl st, San Francisco, CA, 94444",
-                                                "event", "happy day"));
+                                .isEqualTo(testTask);
                 assertThat(json.parseObject(expected).getId()).isEqualTo(101);
                 assertThat(json.parseObject(expected).getStartTime())
                                 .isEqualTo(LocalDateTime.parse("03/01/2024 12:00:00", formatter));
