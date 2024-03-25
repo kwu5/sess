@@ -22,7 +22,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "taskId")
-    private Long id;
+    private Long taskId;
 
     @Column(name = "startTime", nullable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "UTC")
@@ -76,11 +76,11 @@ public class Task {
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.taskId = id;
     }
 
     public Long getId() {
-        return id;
+        return taskId;
     }
 
     public LocalDateTime getStartTime() {
@@ -159,6 +159,6 @@ public class Task {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, startTime, endTime, ownerId, clientId, location, type, description);
+        return Objects.hash(taskId, startTime, endTime, ownerId, clientId, location, type, description);
     }
 }
