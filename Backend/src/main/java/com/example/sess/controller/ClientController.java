@@ -21,18 +21,11 @@ public class ClientController {
 
     // @PreAuthorize("hasRole('ROLE_ADMIN')")
     // @GetMapping("/{requestId}")
-    // public ResponseEntity<Client> (@RequestParam String param) {
-    // return new SomeData();
+    // public ResponseEntity<Client> getSingleClient(@RequestParam String param, ) {
+
     // }
 
     /**
-     * 
-     * private final ClientService clientService;
-     * 
-     * @Autowired
-     *            public ClientController(ClientService clientService) {
-     *            this.clientService = clientService;
-     *            }
      * 
      * @PostMapping
      *              public ResponseEntity<?> createClient(@RequestBody Client

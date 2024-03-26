@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.example.sess.models.Client;
 
-import java.util.List;
 import java.time.LocalDate;
 import java.util.Optional;
 
