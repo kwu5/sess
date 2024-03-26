@@ -41,9 +41,9 @@ public class SessJsonTests {
                                 new Task(LocalDateTime.parse("02/01/2024 10:00:00", formatter),
                                                 LocalDateTime.parse("02/01/2024 11:00:00", formatter), 31L, 50L,
                                                 "3333 hell st, San Francisco, CA, 94444", "appointment", null));
-                tasks[0].setId(99L);
-                tasks[1].setId(101L);
-                tasks[2].setId(100L);
+                tasks[0].setTaskId(99L);
+                tasks[1].setTaskId(101L);
+                tasks[2].setTaskId(100L);
 
         }
 
@@ -52,8 +52,8 @@ public class SessJsonTests {
                 // Task task = tasks.get(0);
                 Task task = tasks[0];
                 assertThat(json.write(task)).isStrictlyEqualToJson("single.json");
-                assertThat(json.write(task)).hasJsonPathNumberValue("@.id");
-                assertThat(json.write(task)).extractingJsonPathNumberValue("@.id")
+                assertThat(json.write(task)).hasJsonPathNumberValue("@.taskId");
+                assertThat(json.write(task)).extractingJsonPathNumberValue("@.taskId")
                                 .isEqualTo(99);
                 assertThat(json.write(task)).hasJsonPathValue("@.startTime");
                 assertThat(json.write(task)).extractingJsonPathValue("@.startTime")
@@ -83,8 +83,8 @@ public class SessJsonTests {
         public void taskSerializationTestWithNullField() throws IOException {
                 Task task = tasks[1];
                 assertThat(json.write(task)).isStrictlyEqualToJson("singleWithNull.json");
-                assertThat(json.write(task)).hasJsonPathNumberValue("@.id");
-                assertThat(json.write(task)).extractingJsonPathNumberValue("@.id")
+                assertThat(json.write(task)).hasJsonPathNumberValue("@.taskId");
+                assertThat(json.write(task)).extractingJsonPathNumberValue("@.taskId")
                                 .isEqualTo(101);
                 assertThat(json.write(task)).hasJsonPathValue("@.startTime");
                 assertThat(json.write(task)).extractingJsonPathValue("@.startTime")
@@ -120,7 +120,7 @@ public class SessJsonTests {
         public void taskDeserializationTest() throws IOException {
                 String expected = """
                                 {
-                                    "id": 99,
+                                    "taskId": 99,
                                     "startTime": "2024-01-01 10:00:00",
                                     "endTime": "2024-01-01 11:00:00",
                                     "ownerId": 30,
@@ -133,10 +133,10 @@ public class SessJsonTests {
                 Task testTask = new Task(LocalDateTime.parse("01/01/2024 10:00:00", formatter),
                                 LocalDateTime.parse("01/01/2024 11:00:00", formatter), 30L, 50L,
                                 "3333 hell st, San Francisco, CA, 94444", "appointment", "happy day");
-                testTask.setId(99L);
+                testTask.setTaskId(99L);
                 assertThat(json.parse(expected))
                                 .isEqualTo(testTask);
-                assertThat(json.parseObject(expected).getId()).isEqualTo(99);
+                assertThat(json.parseObject(expected).getTaskId()).isEqualTo(99);
                 assertThat(json.parseObject(expected).getStartTime())
                                 .isEqualTo(LocalDateTime.parse("01/01/2024 10:00:00", formatter));
                 assertThat(json.parseObject(expected).getEndTime())
@@ -151,7 +151,7 @@ public class SessJsonTests {
         public void taskDeserializationTestWithNullField() throws IOException {
                 String expected = """
                                 {
-                                    "id": 101,
+                                    "taskId": 101,
                                     "startTime": "2024-03-01 12:00:00",
                                     "endTime": "2024-03-01 16:00:00",
                                     "ownerId": 30,
@@ -165,10 +165,10 @@ public class SessJsonTests {
                                 LocalDateTime.parse("03/01/2024 16:00:00", formatter), 30L, null,
                                 "33 hl st, San Francisco, CA, 94444",
                                 "event", "happy day");
-                testTask.setId(101L);
+                testTask.setTaskId(101L);
                 assertThat(json.parse(expected))
                                 .isEqualTo(testTask);
-                assertThat(json.parseObject(expected).getId()).isEqualTo(101);
+                assertThat(json.parseObject(expected).getTaskId()).isEqualTo(101);
                 assertThat(json.parseObject(expected).getStartTime())
                                 .isEqualTo(LocalDateTime.parse("03/01/2024 12:00:00", formatter));
                 assertThat(json.parseObject(expected).getEndTime())

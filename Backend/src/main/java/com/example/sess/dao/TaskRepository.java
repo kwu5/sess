@@ -14,19 +14,14 @@ import java.util.Optional;
 import java.time.LocalDateTime;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long>, PagingAndSortingRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    Optional<Task> findById(Long id);
-
-    Task findByIdAndOwnerId(Long id, long ownerId);
-
-    Page<Task> findByOwnerId(long ownerId, PageRequest pageRequest);
+    Optional<Task> findByTaskId(Long taskId);
 
     boolean existsByStartTimeAndOwnerId(LocalDateTime startTime, long ownerId);
 
-    boolean existsByIdAndOwnerId(Long requestId, long ownerId);
+    Optional<Task> findByTaskIdAndOwnerId(Long taskId, long ownerId);
 
-    boolean existsByStartTimeAndEndTimeAndOwnerIdAndClientIdAndLocationAndTypeAndDescription(LocalDateTime startTime,
-            LocalDateTime endTime, long ownerId, Long clientId, String location, String type, String description);
+    Page<Task> findByOwnerId(long ownerId, Pageable pageable);
 
 }

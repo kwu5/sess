@@ -75,12 +75,12 @@ public class Task {
     protected Task() {
     }
 
-    public void setId(Long id) {
-        this.taskId = id;
+    public Long getTaskId() {
+        return this.taskId;
     }
 
-    public Long getId() {
-        return taskId;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public LocalDateTime getStartTime() {

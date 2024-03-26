@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.sess.dao.*;
+import com.example.sess.dto.TaskUpdateRequest;
 import com.example.sess.models.*;
 import com.example.sess.services.UserService;
 import com.example.sess.services.TaskService;
@@ -40,72 +42,76 @@ public class TaskService {
         }
     }
 
-    // public Task findOwnedTaskById(Long id, String ownerName) {
+    public Task getTaskById(Long id) {
 
-    // Long userid = userService.getUserId(ownerName);
-    // System.out.println("userid is " + userid);
-    // return taskRepository.findByIdAndOwnerId(id, userid);
-    // }
+        Optional<Task> task = taskRepository.findByTaskId(id);
+        if (task.isPresent()) {
+            return task.get();
+        }
+        return null;
+    }
 
-    // public Task findTask(Long id) {
-    // Optional<Task> optionalTask = taskRepository.findById(id);
-    // if (optionalTask.isPresent()) {
-    // Task task = optionalTask.get();
-    // return task;
-    // } else {
-    // return null;
-    // }
-    // }
+    public Task getTaskByIdAndOwnerId(Long taskId, Long owerId) {
 
-    // public Page<Task> findAll(Pageable pageable, String username) {
-    // Long userid = userService.getUserId(username);
-    // Page<Task> page = taskRepository.findByOwnerId(userid,
-    // PageRequest.of(
-    // pageable.getPageNumber(),
-    // pageable.getPageSize(),
-    // pageable.getSortOr(Sort.by(Sort.Direction.ASC, "startTime"))));
-    // return page;
-    // }
+        Optional<Task> task = taskRepository.findByTaskIdAndOwnerId(taskId, owerId);
+        if (task.isPresent()) {
+            return task.get();
+        }
+        return null;
+    }
 
-    // public Page<Task> findAll(Pageable pageable) {
-    // Page<Task> page = taskRepository.findAll(
-    // PageRequest.of(
-    // pageable.getPageNumber(),
-    // pageable.getPageSize(),
-    // pageable.getSortOr(Sort.by(Sort.Direction.ASC, "startTime"))));
-    // return page;
-    // }
+    public Page<Task> getTaskByOwner(Long ownerId, Pageable pageable) {
+        return taskRepository.findByOwnerId(ownerId, pageable);
+    }
 
-    // public boolean isTaskPresent(Task task) {
-    // return
-    // taskRepository.existsByStartTimeAndEndTimeAndOwnerIdAndClientIdAndLocationAndTypeAndDescription(
-    // task.getStartTime(), task.getEndTime(), task.getOwnerId(),
-    // task.getClientId(), task.getLocation(),
-    // task.getType(), task.getDescription());
-    // }
+    // More getter if need...
 
-    // // TODO:
-    // public Task updateTask(Long id, Task datatoUpdate, String name) {
+    public Optional<Task> updateTask(Long taskId, TaskUpdateRequest updateRequest, User user) {
 
-    // Optional<Task> taskBeingUpdated = taskRepository.findById(id);
+        Optional<Task> existingtask = taskRepository.findByTaskId(taskId);
 
-    // if (taskBeingUpdated.isEmpty()) {
-    // return null;
-    // }
-    // datatoUpdate.setId(taskBeingUpdated.get().getId());
-    // taskRepository.save(datatoUpdate);
+        if (existingtask.isPresent()) {
 
-    // return datatoUpdate;
+            Task task = existingtask.get();
 
-    // }
+            if (user.isAdmin()) {
+                if (updateRequest.getStartTime() != null) {
+                    task.setStartTime(updateRequest.getStartTime());
+                }
+                if (updateRequest.getEndTime() != null) {
+                    task.setEndTime(updateRequest.getEndTime());
+                }
+                if (updateRequest.getClientId() != null) {
+                    task.setClientId(updateRequest.getClientId());
+                }
+                if (updateRequest.getLocation() != null && !updateRequest.getLocation().isEmpty()) {
+                    task.setLocation(updateRequest.getLocation());
+                }
+                if (updateRequest.getType() != null && !updateRequest.getType().isEmpty()) {
+                    task.setType(updateRequest.getType());
+                }
+                if (updateRequest.getDescription() != null) {
+                    task.setDescription(updateRequest.getDescription());
+                }
 
-    // public void deleteById(@PathVariable Long requestId) {
-    // taskRepository.deleteById(requestId);
-    // }
+            } else {
+                if (updateRequest.getDescription() != null) {
+                    task.setDescription(updateRequest.getDescription());
+                }
+            }
+            taskRepository.save(task);
+            return Optional.of(task);
+        }
+        return existingtask;
+    }
 
-    // public boolean existsByIdAndOwner(Long requestId, String name) {
-    // return taskRepository.existsByIdAndOwnerId(requestId,
-    // userService.getUserId(name));
-    // }
+    public Boolean deleteTaskById(Long taskId) {
+        Optional<Task> taskOptional = taskRepository.findByTaskId(taskId);
+        if (taskOptional.isPresent()) {
+            taskRepository.delete(taskOptional.get());
+            return true;
+        }
+        return false;
+    }
 
 }

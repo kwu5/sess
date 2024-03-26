@@ -47,7 +47,7 @@ public class ClientService {
     }
 
     /**
-     * More getter if need TODO:
+     * More getter if need;
      */
 
     public boolean deleteClientById(Long id) {
@@ -82,6 +82,7 @@ public class ClientService {
             client.setComment(updateRequest.getComment());
 
             clientRepository.save(client);
+            return Optional.of(client);
         }
         return existingClient;
 

@@ -109,4 +109,10 @@ public class User {
         return Objects.hash(id, username, role, email);
     }
 
+    public boolean isAdmin() {
+        if (this.role == "ADMIN")
+            return true;
+        return false;
+    }
+
 }
