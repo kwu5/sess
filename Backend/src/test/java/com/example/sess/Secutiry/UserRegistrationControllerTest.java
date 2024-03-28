@@ -1,26 +1,20 @@
 package com.example.sess.Secutiry;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-
-// import com.example.sess.util.JwtUtil;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.example.sess.config.SecurityConfig;
 import com.example.sess.controller.UserRegistrationController;
 import com.example.sess.dto.UserRegistrationDto;
 import com.example.sess.models.User;
@@ -28,8 +22,6 @@ import com.example.sess.services.CustomUserDetailsService;
 import com.example.sess.services.UserService;
 import com.example.sess.util.JwtUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.transaction.Transactional;
 
 // @WebMvcTest(UserRegistrationController.class)
 @WebMvcTest(controllers = UserRegistrationController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
