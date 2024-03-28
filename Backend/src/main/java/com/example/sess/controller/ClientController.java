@@ -54,7 +54,6 @@ public class ClientController {
         if (!clientPage.isEmpty()) {
             return ResponseEntity.ok(clientPage);
         }
-
         return ResponseEntity.notFound().build();
     }
 

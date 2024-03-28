@@ -3,6 +3,7 @@ package com.example.sess.Client;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -130,5 +131,15 @@ public class ClientControllerTest {
                 .andExpect(jsonPath("$.content[0].lastName").value("Doe"));
 
         // TODO: add non exist test
+    }
+
+    @Test
+    @WithMockUser(username = "admin", roles = { "ADMIN" })
+    public void createClient_ShouldReturnAClientWhenCreateIt() throws Exception {
+
+        when(clientService.createdClient(mockClient)).thenReturn(mockClient);
+        mockMvc.perform(post("/clients"))
+                .andExpect(status().isOk());
+
     }
 }
